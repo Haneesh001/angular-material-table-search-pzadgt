@@ -3,6 +3,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { AppRoutingModule } from "./app-routing.module";
 
 // Jim's section:
 import { MembersComponent } from './members/members.component';
@@ -11,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService }  from '../server/in-memory-data.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { APP_BASE_HREF } from '@angular/common';
 
 import { ConfirmService } from './services/confirm-dialog/confirm.service';
 import { ConfirmComponent } from './services/confirm-dialog/confirm.component';
@@ -84,6 +86,7 @@ import {
   MatTreeModule,
 } from '@angular/material';
 import {AppComponent} from './app.component';
+import { OrganisationComponent } from './Organisation/organisation';
 
 
 
@@ -152,7 +155,7 @@ export class MaterialModule {}
 @NgModule({
   imports: [
     // Jim's
-    FlexLayoutModule,
+    FlexLayoutModule,AppRoutingModule,
     
     // Stackbliz
     BrowserModule,
@@ -166,6 +169,8 @@ export class MaterialModule {}
       InMemoryDataService
     )
   ],
+
+  
   declarations: [
     AppComponent,
     MembersComponent,
@@ -174,7 +179,8 @@ export class MaterialModule {}
     EditMemberComponent,
     AddMemberComponent,
     AddEditFormComponent,
-    MenuDetailsComponent
+    MenuDetailsComponent,
+    OrganisationComponent
   ],
   providers: [
     MembersComponent,
@@ -188,6 +194,7 @@ export class MaterialModule {}
     {provide: ErrorMatcherService, useClass:     ShowOnDirtyErrorStateMatcher},
     {provide: MAT_DIALOG_DATA, useValue: {}},
     {provide: MatDialogRef, useValue: {}},
+    {provide: APP_BASE_HREF, useValue: '/'}
     
   ],
   bootstrap: [MenuDetailsComponent],

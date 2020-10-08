@@ -6,15 +6,22 @@
     </mat-list-item>
 
 	  <mat-list-item>
-      <button mat-menu-item [matMenuTriggerFor]="billsmenu">Organisation</button>
+      <button mat-menu-item [matMenuTriggerFor]="billsmenu">Organisation  Management</button>
     </mat-list-item>
     <mat-menu #billsmenu="matMenu" [overlapTrigger]="false">
       <button mat-menu-item>
         <mat-icon>home</mat-icon>
-        <span>Organisation Management</span>
+        
+       
+        
+          <a routerLink="org-details" >
+        
+         <span>Organisation Details</span></a>
+        
       </button>
-    </mat-menu>
 
+    </mat-menu>
+    
     <mat-list-item>
       <button mat-menu-item [matMenuTriggerFor]="claimsmenu">Employee  Management </button>
     </mat-list-item>
@@ -108,21 +115,8 @@
 
   </mat-nav-list>
 </mat-toolbar>
-<div class="basic-container">
-  <!-- <p>
-    Shows how to make a horizontal <code>mat-nav-list</code> by using some custom css.
-  </p>
-  <p>
-    Take a look inside <code>/styles.scss</code> to see the implementation.
-  </p> -->
-  <!-- <p>
-    See the issue on <a href="https://stackoverflow.com/questions/49161039/mat-nav-list-horizontal-instead-of-vertical">StackOverflow</a>.
-  </p> -->
-</div>
+<router-outlet></router-outlet>
 
-<!--
-Copyright Google LLC All Rights Reserved.
 
-Use of this source code is governed by an MIT-style license that can be
-found in the LICENSE file at https://angular.io/license
--->
+
+

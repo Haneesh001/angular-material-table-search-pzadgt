@@ -8,7 +8,7 @@ import { VERSION } from '@angular/material';
 })
 export class MenuDetailsComponent implements OnInit {
   version = VERSION;
-  constructor() { }
+  constructor( ) { }
 
   ngOnInit() {
   }
