@@ -1,0 +1,114 @@
+// @import '~@angular/material/prebuilt-themes/pink-bluegrey.css';
+
+@import "theme";
+
+body { 
+  font-family: Roboto, Arial, sans-serif;
+  color: darkgray;
+  margin: 0;
+}
+
+.basic-container {
+  padding: 5px;
+}
+
+.version-info {
+  font-size: 8pt;
+  float: right;
+}
+
+.button {
+  color: #6b6868;
+}
+
+
+
+.searchSection {
+  width: 100%;
+  padding: 2em 0 1em 0;
+}
+/*  This can also be used.
+.tableSection {
+  height: 100%;
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
+*/
+.tableSection {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.matTable {
+    width: auto;
+    overflow: scroll;
+}
+
+.mat-header-cell{
+  text-align: left;
+  background-color: lightgray;
+}
+
+.mat-cell {
+  text-align: left;
+}
+
+.mat-checkbox {
+    text-align: center;
+}
+
+.formError {
+  color: red;
+  font-size: smaller;
+}
+
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+body { 
+  font-family: Roboto, Arial, sans-serif;
+  margin: 0;
+}
+
+.basic-container {
+  padding: 50px; 
+
+  a {
+    text-decoration: none;
+    color: yellow;
+  } 
+}
+
+.version-info {
+  color: black;
+  font-size: 8pt;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
+/* here's what you're looking for B-) */
+mat-nav-list.list-horizontal {
+  padding: 0;
+  .mat-list-item {
+    display: inline-block;
+    height: auto;
+    width: auto;
+  }
+}
+
+.mat-toolbar-row, .mat-toolbar-single-row{
+  height: unset !important;
+}
+
+.mat-list-item .mat-list-item-content {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+/**
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */

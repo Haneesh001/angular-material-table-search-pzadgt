@@ -1,0 +1,128 @@
+<mat-toolbar color="secondary">
+	<mat-nav-list class="list-horizontal">
+
+     <mat-list-item>
+      <button mat-menu-item>Home</button>
+    </mat-list-item>
+
+	  <mat-list-item>
+      <button mat-menu-item [matMenuTriggerFor]="billsmenu">Organisation</button>
+    </mat-list-item>
+    <mat-menu #billsmenu="matMenu" [overlapTrigger]="false">
+      <button mat-menu-item>
+        <mat-icon>home</mat-icon>
+        <span>Organisation Management</span>
+      </button>
+    </mat-menu>
+
+    <mat-list-item>
+      <button mat-menu-item [matMenuTriggerFor]="claimsmenu">Employee  Management </button>
+    </mat-list-item>
+    <mat-menu #claimsmenu="matMenu" [overlapTrigger]="false">
+      <button mat-menu-item>
+        <mat-icon>home</mat-icon>
+        <span>Employee Details</span>
+      </button>
+      <button mat-menu-item>
+        <!-- <mat-icon>save_alt</mat-icon> -->
+        <span> Employee Downloads </span>
+      </button>
+    </mat-menu>
+
+    <mat-list-item>
+      <button mat-menu-item [matMenuTriggerFor]="mcsMenu">Device Management</button>
+    </mat-list-item>
+    <mat-menu #mcsMenu="matMenu" [overlapTrigger]="false">
+      <button mat-menu-item>
+        <mat-icon>home</mat-icon>
+        <span>Device Users</span>
+      </button>
+    </mat-menu>
+
+    <!-- <mat-list-item>
+      <button mat-menu-item [matMenuTriggerFor]="referralsmenu">hh</button>
+    </mat-list-item> -->
+    <!-- <mat-menu #referralsmenu="matMenu" [overlapTrigger]="false">
+      <button mat-menu-item>
+        <mat-icon>home</mat-icon>
+        <span>Telephonic Case Management</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>save_alt</mat-icon>
+        <span>Utilization Review </span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>home</mat-icon>
+        <span>Pharmacy Management</span>
+      </button>
+    </mat-menu> -->
+
+    <mat-list-item>
+      <button mat-menu-item [matMenuTriggerFor]="DRmenu">Dashboards & Reports</button>
+    </mat-list-item>
+    <mat-menu #DRmenu="matMenu" [overlapTrigger]="false">
+      <button mat-menu-item>
+        <mat-icon>home</mat-icon>
+        <span>Dashboards</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>save_alt</mat-icon>
+        <span>Reports </span>
+      </button>
+    </mat-menu>
+
+    <mat-list-item>
+      <button mat-menu-item [matMenuTriggerFor]="adminmenu">Administration</button>
+    </mat-list-item>
+    <mat-menu #adminmenu="matMenu" [overlapTrigger]="false">
+      <button mat-menu-item>
+        <mat-icon>home</mat-icon>
+        <span>Coverage</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>save_alt</mat-icon>
+        <span>Configuration</span>
+      </button>
+    </mat-menu>
+
+    <!-- <mat-list-item>
+      <button mat-menu-item [matMenuTriggerFor]="searchmenu">Search</button>
+    </mat-list-item>
+    <mat-menu #searchmenu="matMenu" [overlapTrigger]="false">
+      <button mat-menu-item>
+        <mat-icon>home</mat-icon>
+        <span>Bills</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>save_alt</mat-icon>
+        <span>Claims </span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>home</mat-icon>
+        <span>Providers</span>
+      </button>
+    </mat-menu> -->
+
+    
+
+
+  </mat-nav-list>
+</mat-toolbar>
+<div class="basic-container">
+  <!-- <p>
+    Shows how to make a horizontal <code>mat-nav-list</code> by using some custom css.
+  </p>
+  <p>
+    Take a look inside <code>/styles.scss</code> to see the implementation.
+  </p> -->
+  <!-- <p>
+    See the issue on <a href="https://stackoverflow.com/questions/49161039/mat-nav-list-horizontal-instead-of-vertical">StackOverflow</a>.
+  </p> -->
+</div>
+
+<!--
+Copyright Google LLC All Rights Reserved.
+
+Use of this source code is governed by an MIT-style license that can be
+found in the LICENSE file at https://angular.io/license
+-->
