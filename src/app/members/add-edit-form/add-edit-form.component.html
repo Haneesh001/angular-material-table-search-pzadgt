@@ -1,8 +1,3 @@
-
-
-
-
-
 <mat-card-content>
   <form [formGroup]="addEditMemberForm"
         (ngSubmit)="onSubmit(addEditMemberForm.value)"
@@ -13,9 +8,9 @@
       <li>
         <label class="label-pad">Name: </label>
         <mat-form-field class="inputBackground">
-          <input matInput #firstName maxlength="30" class="inputField" type="text" id="first_name"
-                 formControlName="first_name" [errorStateMatcher]="matcher" required>
-          <mat-hint align="end">{{firstName.value?.length || 0}}/30</mat-hint>
+          <input matInput #name maxlength="30" class="inputField" type="text" id="name"
+                 formControlName="name" [errorStateMatcher]="matcher" required>
+          <mat-hint align="end">{{name.value?.length || 0}}/30</mat-hint>
           <mat-error>{{ errors.required }}</mat-error>
         </mat-form-field>
       </li>
@@ -23,25 +18,24 @@
 
       <li><label class="label-pad">Contact Person: </label>
         <mat-form-field class="inputBackground">
-          <input matInput #lastName maxlength="30" class="inputField" type="text" id="last_name"
-                 formControlName="last_name" [errorStateMatcher]="matcher" required>
-          <mat-hint align="end">{{lastName.value?.length || 0}}/30</mat-hint>
+          <input matInput #contact_person maxlength="30" class="inputField" type="text" id="contact_person"
+                 formControlName="contact_person" [errorStateMatcher]="matcher" required>
+          <mat-hint align="end">{{contact_person.value?.length || 0}}/30</mat-hint>
           <mat-error>{{ errors.required }}</mat-error>
         </mat-form-field>
       </li>
 
       <li><label class="label-pad">Email: </label>
         <mat-form-field class="inputBackground">
-          <input matInput #userName maxlength="30" 
-                 class="inputField" type="text" id="user_name"
-                 formControlName="user_name" 
-                 [errorStateMatcher]="matcher" required 
-                 (blur)="validateUsername(userName.value)">
+          <input matInput #contact_email maxlength="30" 
+                 class="inputField" type="email" id="contact_email"
+                 formControlName="contact_email" 
+                 [errorStateMatcher]="matcher" required>
 
-          <mat-hint align="end">{{userName.value?.length || 0}}/30</mat-hint>
+          <mat-hint align="end">{{contact_email.value?.length || 0}}/30</mat-hint>
 
           <div class="formError" *ngIf = "this.inDatabase === true">
-            This username already exists in our database</div>
+            This contact_email already exists in our database</div>
 
           <mat-error>{{ errors.required }}</mat-error>
 
@@ -49,16 +43,30 @@
       </li>
       <br>
 
+
+
       <li><label class="label-pad">Org_Name: </label>
         <mat-form-field>
-          <mat-select placeholder="Select one" type="text" id="country"
-                      formControlName="country" required>
-            <mat-option *ngFor="let country of countries"
-                    [value]="country">{{country}}
+          <mat-select placeholder="Select one" type="text" id="org_code"
+                      formControlName="org_code" required>
+            <mat-option *ngFor="let org_code of org_codes"
+                    [value]="org_code">{{org_code}}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </li>
+
+      <li><label class="label-pad">Location_code: </label>
+        <mat-form-field>
+          <mat-select placeholder="Select one" type="text" id="location_code"
+                      formControlName="location_code" required>
+            <mat-option *ngFor="let location_code of location_codes"
+                    [value]="location_code">{{location_code}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </li>
+
 
 
     </ul>

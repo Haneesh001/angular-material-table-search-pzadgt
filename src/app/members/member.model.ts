@@ -1,7 +1,8 @@
 export class MemberModel {
     public id: number;
-    public first_name: string;
-    public last_name: string;
-    public user_name: string;
-    public country: string;
+    public name: string;
+    public contact_person: string;
+    public contact_email: string;
+    public org_code: string;
+    public location_code:string;
 }

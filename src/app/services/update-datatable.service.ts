@@ -9,6 +9,8 @@ export class UpdateDatatableService {
   // Remove the old item in Mat Table and replace with new at same index.
   // No need to refresh data from server.
 
+  
+
   public updateDataTable (
     updatedData, recordId, idColumn, paginator, dataSource,
     formValue) {

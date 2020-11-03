@@ -1,6 +1,3 @@
-
-
-
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { ErrorMatcherService, errorMessages } from '../../services/form-validation/form-validators.service';
@@ -11,6 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { countries } from '../../../server/countries-list';
 
 import { UniqueNameService } from '../../services/unique-name.service';
+import { HttpService } from 'src/app/http.service';
 
 
 
@@ -31,22 +29,27 @@ export class AddEditFormComponent implements OnInit {
 
 
   // Used on form html.
-  public countries = countries;
+ // public org_codes = countries;
+ public org_codes;
+  public org_code: string;
+  public  location_codes;
+  public location_code:string;
 
   public inDatabase;
 
 
   public formErrors = {
-    first_name: '',
-    last_name: '',
-    user_name: '',
-    country: '',
+    name: '',
+    contact_person: '',
+    contact_email: '',
+    org_code: '',
+    location_code:''
   };
 
 
 
   constructor(
-    private fb: FormBuilder,
+    private fb: FormBuilder, private httpService:  HttpService,
     public uniqueNameService: UniqueNameService,
   ) {
     // Conditional that monitors testing for unique name by service.
@@ -60,6 +63,11 @@ export class AddEditFormComponent implements OnInit {
     this.createForm();
     // Set the initial user name validation trigger to false - no message.
     this.inDatabase = this.uniqueNameService.inDatabase.value;
+    this.httpService.searchCountries(this.org_codes)
+    .subscribe(org => this.org_codes = org);
+    this.httpService.searchCode(this.location_codes)
+    .subscribe(code => this.location_codes = code);
+    
   }
 
 
@@ -68,23 +76,24 @@ export class AddEditFormComponent implements OnInit {
   private createForm() {
     this.addEditMemberForm = this.fb.group({
       id: [''],
-      first_name: ['', Validators.required],
-      last_name: ['', Validators.required],
-      user_name: ['', Validators.required],
-      country: ['', Validators.required],
+      name: ['', Validators.required],
+      contact_person: ['', Validators.required],
+      contact_email: ['', [Validators.required, Validators.email]],
+      org_code: ['', Validators.required],
+      location_code: ['', Validators.required],
     });
   }
 
 
 
 
-  // Check db if name is already taken.
+  // Check db if email is already taken.
   // If not then this.inDatabase = false (the trigger)
   //   and isTaken() isn't called.
   // Called from input blur property on template.
 
-  public validateUsername(userName) {
-    return this.uniqueNameService.validateUsername(userName);
+  public validateUsername(contact_email) {
+    return this.uniqueNameService.validateUsername(contact_email);
   }
 
 
@@ -99,7 +108,7 @@ export class AddEditFormComponent implements OnInit {
       this.inDatabase = false;
 
       // Clear the field to reset validation and prepare for next attempt.
-      this.addEditMemberForm.controls['user_name']
+      this.addEditMemberForm.controls['contact_email:']
       .setValue(null);
     }, 3000);
 

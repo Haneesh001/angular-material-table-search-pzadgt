@@ -4,4 +4,5 @@ export const countries = ['Select one:',
   'Imtac India',
   'Imtac Delhi',
   'Imtac Nagpur',
+  'Imtac Muscat',
 ];

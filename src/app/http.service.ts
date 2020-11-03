@@ -1,14 +1,4 @@
 
-
-// THIS ONLY DELETES WHAT IS IN MEMORY.
-// REFRESHING THE BROWSER CLEARS THE MEMORY
-//   AND THE ORIGINAL FILE DB IS RELOADED.
-// THERE IS NO REAL DATABASE HERE.
-// FORK IT AND ADD FIREBASE IF YOU LIKE.
-
-// Showing different ways to pass a URL to the service.
-
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -28,6 +18,7 @@ const httpOptions = {
 export class HttpService {
 
   private api = '/api/';
+  private url = 'http://localhost:8081/api/organisation';
 
   constructor(
     private http: HttpClient,
@@ -35,9 +26,10 @@ export class HttpService {
 
 // ----------------- CRUD -------------------
 
+
   // --------------GET ALL RECORDS ------------
   public getAllRecords(url): Observable<any> {
-    return this.http.get<MemberModel>(url).pipe(
+    return this.http.get<any>('http://localhost:8081/api/organisation').pipe(
       catchError((error: any) => {
            console.error(error);
            return of();
@@ -49,7 +41,7 @@ export class HttpService {
   // ----------- CREATE new record -----------
 
   public addRecord(url: string, recordData):  Observable<any> {
-    return this.http.post(url, recordData).pipe(
+    return this.http.post('http://localhost:8081/api/organisation', recordData).pipe(
       catchError((error: any) => {
            console.error(error);
            return of();
@@ -63,7 +55,7 @@ export class HttpService {
   // ---- FETCH record detail for editing or viewing. ----
 
   public getRecordById(url, recordId): Observable<any> {
-    return this.http.get<any>(`${url}/${recordId}`).pipe(
+    return this.http.get<any>(`${'http://localhost:8081/api/organisation'}/${recordId}`).pipe(
       catchError((error: any) => {
            console.error(error);
            return of();
@@ -74,9 +66,11 @@ export class HttpService {
 
   // ---- UPDATES an existing record ----
 
-  public updateRecord(url, recordUpdate): Observable<any> {
-    return this.http.put(url, recordUpdate, httpOptions).pipe(
+  public updateRecord(url, recordUpdate,recordId): Observable<any> {
+     return this.http.put(`${'http://localhost:8081/api/organisation'}/${recordId}`, recordUpdate, httpOptions)
+    .pipe(
       catchError((error: any) => {
+        console.log("updatedsucessfullychch");
            console.error(error);
            return of();
          }),
@@ -88,7 +82,7 @@ export class HttpService {
   // --------- DELETES a single record. ---------
 
   public deleteRecord(url):  Observable<any> {
-    return this.http.delete(url).pipe(
+    return this.http.delete('http://localhost:8081/api/organisation').pipe(
       catchError((error: any) => {
            console.error(error);
            return of();
@@ -100,8 +94,11 @@ export class HttpService {
 // --------------- QUERIES ---------------------
 
   public searchCountries(url) {
-    return this.http.get<any>(url).pipe(
+    console.log(url);
+    
+    return this.http.get<any>('http://localhost:8081/api/organisation/organisation/org_code').pipe(
       map(data => {
+        console.log(data);
         return data;
       }),
       catchError((error: any) => {
@@ -111,8 +108,9 @@ export class HttpService {
     );
   }
 
+
   public searchCode(url) {
-    return this.http.get<any>(url).pipe(
+    return this.http.get<any>('http://localhost:8081/api/organisation/organisation/location_code').pipe(
       map(data => {
         return data;
       }),
@@ -132,8 +130,8 @@ export class HttpService {
         debounceTime(300),
         distinctUntilChanged(),
         switchMap(term => {
-          const url = `api/members/?last_name=${term}`;
-          return this.http.get(url);
+          const url = `/?contact_person=${term}`;
+          return this.http.get('http://localhost:8081/api/organisation/organisation/contact_person');
       }),
       catchError((error: any) => {
            console.error(error);
@@ -145,9 +143,9 @@ export class HttpService {
   // --------------- FORM CONTROLS ---------------------
 
 
-  public validateUsername(userName) {
+  public validateUsername(name) {
  
-    const url = `api/members/?user_name=${userName}`;
+    const url = `api/members/?name=${name}`;
     return this.http.get(url).pipe(
       map(data => {
         return data;
@@ -155,6 +153,7 @@ export class HttpService {
       catchError((error: any) => {
            console.error(error);
            return of();
+           
       }),
     );
   }

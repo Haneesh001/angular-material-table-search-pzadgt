@@ -1,36 +1,36 @@
-<section class="searchSection">
+ <section class="searchSection">
 
 	<div fxLayout="row" fxLayoutAlign="space-around center">
 
-		<!-- <button class='button' mat-raised-button (click)="getAllRecords()">
-      Get all members</button> -->
-
-    <!-- <button mat-raised-button (click)="getAllSelected()">Show Selected</button> -->
     
      
   </div>
 
-  <div fxLayout="row" fxLayoutAlign="space-around center">
+   <div fxLayout="row" fxLayoutAlign="space-around center">
 
         <mat-form-field> 
-            <mat-select placeholder="Search by Organisation_NAME" [formControl]="countriesControl">
-                <mat-option *ngFor="let country of countries"
-                            [value]="country"
-                            (click)="searchCountries(country)">{{country}}
+            <mat-select placeholder="Search by Organisation_NAME" [formControl]="organisationCode">
+                <mat-option *ngFor="let org_code of org_codes"
+                            [value]="org_code"
+                            (click)="searchCountries(org_code)">{{org_code}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
 
-         
+        <mat-form-field>
+          <mat-label>Filter</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="filter by All" #input>
+        </mat-form-field>
 
         <mat-form-field> 
-            <mat-select placeholder="Search by Registration_Code" [formControl]="organisationCode">
-                <mat-option *ngFor="let rcode of rcodes"
-                            [value]="rcode"
-                            (click)="searchCode(rcode)">{{rcode}}
+            <mat-select placeholder="Search by Location_Code" [formControl]="LocationCode">
+                <mat-option *ngFor="let location_code of location_codes"
+                            [value]="location_code"
+                            (click)="searchCode(location_code)">{{location_code}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
+        
 
 
         <!-- Last name query. -->
@@ -40,47 +40,63 @@
               </mat-form-field>
   </div>
 
-</section> 
+</section>  
 
 <!-- End search section -->
 
- <button mat-raised-button (click)="addRecord()">Add</button>
+ <button mat-raised-button (click)="addRecord()" style = "margin-left:10px">Add</button>
+
+ 
+ <button class='button' mat-raised-button (click)="getAllRecords()"  style="float: right; margin-right:20px">
+  Get All Records</button>
+
+<!-- <button mat-raised-button (click)="getAllSelected()" style = "margin-left:10px">Delete Selected</button> -->
+<button mat-raised-button  (click)="removeSelectedRows()"  style="float: right;margin-right: 10px;">Multiple Delete</button>
+
+ 
+
 <section class='tableSection'>
   
     <mat-table class="matTable" [dataSource]="dataSource">
 
     <ng-container matColumnDef="select">
-        <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
+      
+        <mat-header-cell *matHeaderCellDef> <mat-checkbox (change)="toggleSelectAll($event)">
+
+        </mat-checkbox>
+          
+        </mat-header-cell>
+        
         <mat-cell *matCellDef="let row">
-            <mat-checkbox (click)="selectMember(row.id)"></mat-checkbox>
+          <mat-checkbox [checked]="isSelected" (change)="selectMember($event,row.id)"></mat-checkbox>
         </mat-cell>
-    </ng-container>
+      </ng-container>
     
-    <ng-container matColumnDef="rcode">
-      <mat-header-cell *matHeaderCellDef> Registration_Code</mat-header-cell>
-      <mat-cell  *matCellDef="let row">  {{row.rcode}} </mat-cell>
+    <ng-container matColumnDef="location_code">
+      <mat-header-cell *matHeaderCellDef> LocationCode</mat-header-cell>
+      <mat-cell  *matCellDef="let row">  {{row.location_code}} </mat-cell>
     </ng-container>
  
-    <ng-container matColumnDef="firstName">
+    <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef>  Name </mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.first_name}} </mat-cell>
+      <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
     </ng-container>
 
 
-    <ng-container matColumnDef="lastName">
+    <ng-container matColumnDef="contact_person">
       <mat-header-cell *matHeaderCellDef> ContactPerson </mat-header-cell>
-      <mat-cell  *matCellDef="let row">  {{row.last_name}} </mat-cell>
+      <mat-cell  *matCellDef="let row">  {{row.contact_person}} </mat-cell>
     </ng-container>
 
 
-      <ng-container matColumnDef="userName">
+      <ng-container matColumnDef="contact_email">
           <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
-          <mat-cell *matCellDef="let row">  {{row.user_name}} </mat-cell>
+          <mat-cell *matCellDef="let row">  {{row.contact_email}} </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="country">
-          <mat-header-cell *matHeaderCellDef> Location</mat-header-cell>
-          <mat-cell *matCellDef="let row">  {{row.country}} </mat-cell>
+      <ng-container matColumnDef="org_code">
+          <mat-header-cell *matHeaderCellDef> OrganisationCode</mat-header-cell>
+          <mat-cell *matCellDef="let row">  {{row.org_code}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="options">

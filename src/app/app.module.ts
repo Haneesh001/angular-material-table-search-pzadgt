@@ -165,9 +165,9 @@ export class MaterialModule {}
     ReactiveFormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(
+    /*HttpClientInMemoryWebApiModule.forRoot(
       InMemoryDataService
-    )
+    )*/
   ],
 
   

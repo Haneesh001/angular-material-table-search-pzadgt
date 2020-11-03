@@ -2,7 +2,7 @@ import { Component, ViewChild, Injectable} from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { MatPaginator, MatTableDataSource } from '@angular/material';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormsModule } from '@angular/forms';
 
 import { merge, Subject, Observable } from 'rxjs';
 import { startWith, switchMap, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -17,8 +17,9 @@ import { MessagesService } from '../services/messages-service/messages.service';
 
 import { AddMemberComponent } from './add-member/add-member.component';
 import { EditMemberComponent } from './edit-member/edit-member.component';
-import { countries } from '../../server/countries-list';
-import { rcodes } from '../../server/orgCode-list';
+ import { countries } from '../../server/countries-list';
+ import { rcodes } from '../../server/orgCode-list';
+import { DataSource } from '@angular/cdk/table';
 
 @Component({
   selector: 'app-members',
@@ -47,26 +48,34 @@ private dsData: any;
 
  public displayedColumns = [
       'select',
-      'firstName',
-      'lastName',
-      'userName',
-      'country',
-      'rcode',
+      'name',
+      'contact_person',
+      'contact_email',
+      'org_code',
+      'location_code',
       'options'
   ];
 
   public dataSource = new MatTableDataSource;
 
- // For the countries search dropdown.
-  public countries = countries;
-  public country: string;
-  public countriesControl = new FormControl('');
 
-   public rcodes = rcodes;
-  public rcode: string;
+  public isSelected: boolean = false;
+  // public org_codes =countries;
+  public org_codes: any;
+  public org_code: string;
   public organisationCode = new FormControl('');
 
-  // For last name query
+
+ // public location_codes =  rcodes;
+ public location_codes;
+  public location_code: string;
+
+  public LocationCode = new FormControl('');
+
+
+ 
+
+  // For contact name query
   public searchTerm$ = new Subject<string>();
 
   constructor(
@@ -91,35 +100,36 @@ private dsData: any;
       this.dataSource.paginator = this.paginator;
     }
 
-/*  The Angular Material Data Table docs recommended http with paginator setup below reloads the earlier query when the user alternates between multiple queries in one view.  More queries on the page makes this worse fast.  My suggested code here works.
+    ngOnInit() {
 
-*/
-/*
-  private getAllRecords(): any {
-    // Kills the paginator if omitted.
-    this.dataSource.paginator = this.paginator;  
+      this.httpService.searchCountries(this.org_codes)
+    .subscribe(org => this.org_codes = org);
+    this.httpService.searchCode(this.location_codes)
+    .subscribe(code => this.location_codes = code);
+    }
 
-    merge(this.paginator.page).pipe(
-      // Tap called only with page forward.
-      tap(val => console.log('page forward in getAllRecords')),
-      startWith(null),  // Delete this and no data is downloaded.
-      switchMap(() => {
-        console.log('paginator.pageIndex: ', this.paginator.pageIndex);
-        console.log('paginator.length: ', paginator.length);  // Should show all records for the second page, index 1.
-        return this.httpService.getAllRecords(this.membersUrl);
-      }),
-    )
+    toggleSelectAll(event) {
+      console.log(this.isSelected);
+      if (event.checked == true) {
+        console.log("Checked");
+        // console.log("Get selected record::" + this.idArray);
+  
+        this.isSelected = true;
+        const data = this.dataSource.data;
+        console.log(data);
+        //const ids = Object.keys(data);
+        //var ids = data.map(person => {});
+        var ids = data.map((x: any) => x.id);
+        this.idArray = ids;
+        console.log("test" + this.idArray);
+        console.log(this.isSelected);
+      } else {
+        this.isSelected = false;
+        console.log("unChecked");
+      }
+      console.log(this.isSelected);
+    }
 
-    .subscribe(data => {
-      this.dataLength = data.length;
-      this.dataSource.data = data;
-    },
-    (err: HttpErrorResponse) => {
-    console.log(err.error);
-    console.log(err.message);
-    });
-  }
-*/
 
   // -------------- CRUD ----------------------
 
@@ -127,14 +137,68 @@ private dsData: any;
   // ----------------- GET ALL ------------------
 
   //  This works fine when multiple queries used.
+  
+  // public getAllRecords(): any {
+  //   console.log("all");
+  //     this.httpService.getAllRecords(this.membersUrl)
+  //     .subscribe(data => {
+  //       // this. dataSource = new MatTableDataSource();
+  //       // this.dataSource.data = [];
+  //       console.log(data);
+  //       this.dataLength = data.length;
+       
+  //       this.dataSource.data = data;
+     
+  //     });
+  // }
   public getAllRecords(): any {
-      this.httpService.getAllRecords(this.membersUrl)
-      .subscribe(data => {
-        this.dataLength = data.length;
-        this.dataSource.data = data;
-      });
-    }
+    this.httpService.getAllRecords(this.membersUrl).subscribe(data => {
+      this.dataLength = data.length;
+      this.dataSource.data = data;
+    });
+  }
+
+  //Multilple Delete
+  removeSelectedRows = () => {
+    console.log("delete");
+    this.memberArray = [];
+    const tempArray = [];
+
+    const ds = this.dataSource.data;
+    const property = "id";
+    // this.confirmService.confirm(name, 'This action is final. Gone forever!')
+
+    console.log("Get selected record::" + this.idArray);
+
+    this.idArray.forEach((id, i) => {
+    
+
+      const url = `${this.membersUrl}/${id}`;
+
+      // Call the confirm dialog component
+      this.httpService.deleteRecord(url).subscribe(
+        result => {
+          //this.success();
+          // Refresh DataTable to remove row.
+          this.deleteRowDataTable(
+            id,
+            this.idColumn,
+            this.paginator,
+            this.dataSource
+          );
+        },
+        (err: HttpErrorResponse) => {
+          console.log(err.error);
+          console.log(err.message);
+          this.messagesService.openDialog("Error", "Delete did not happen.");
+        }
+      );
+    });
+    this.idArray = [];
+  };
  
+
+
   // ------------------ ADD --------------------
 
 
@@ -159,10 +223,7 @@ private dsData: any;
     const dsData = this.dataSource.data;
 
     // For delete confirm dialog in deleteItem to match the db column name to fetch.
-    const name1 = 'first_name';
-    const name2 = 'last_name';
-    const record = dsData.find(obj => obj[this.idColumn] === recordId);
-    const name = 'Delete ' + record[name1] + ' ' + record[name2] + '?';
+   
 
     const url = `${this.membersUrl}/${recordId}`;
 
@@ -194,25 +255,47 @@ private dsData: any;
     dataSource.paginator = paginator;
   }
 
+  
+ // ----------------filter------------------
+ 
+ applyFilter(event: Event) {
+  const filterValue = (event.target as HTMLInputElement).value;
+  this.dataSource.filter = filterValue.trim().toLowerCase();
+}
 
 
-  // ----------- SEARCH BY COUNTRY ------------------
+  // ----------- SEARCH BY Location------------------
 
-  public searchCountries(country): any {
+  public searchCountries(org_code): any {
+    console.log("orgcode");
 
-    const url = `${this.membersUrl}/?country=${country}`;
+    const url = `${this.membersUrl}/?org_code=${org_code}`;
+    console.log(url);
 
     this.httpService.searchCountries(url)
       .subscribe(data => {
         this.dataLength = data.length;
         this.dataSource.data = data;
+    
+        
+        const countss =data;
+        this.org_codes = countss;
+        console.log("test" + this.org_codes);
       });
   }
+
+
+ 
+    
+
+
+
+  
   //----------- SEARCH BY COde ------------------
 
-    public searchCode(rcode): any {
+    public searchCode(location_code): any {
 
-    const url = `${this.membersUrl}/?rcode=${rcode}`;
+    const url = `${this.membersUrl}/?location_code=${location_code}`;
 
     this.httpService.searchCode(url)
       .subscribe(data => {
@@ -220,7 +303,6 @@ private dsData: any;
         this.dataSource.data = data;
       });
   }
-
 
   //  ---- LAST NAME INCREMENTAL QUERY IN CONSTRUCTOR -------
 
@@ -230,41 +312,57 @@ private dsData: any;
 
 
   // Called each time a checkbox is checked in the mat table.
-  public selectMember(selectedMember) {
+  public selectMember(event, selectedMember) {
+    console.log(event.checked);
+    console.log("selectedMember");
     // push the id's into an array then call it with the button.
-    return this.idArray.push(selectedMember);
+    if (event.checked) {
+      return this.idArray.push(selectedMember);
+    } else {
+      const index = this.idArray.indexOf(selectedMember);
+      if (index > -1) {
+        this.idArray.splice(index, 1);
+      }
+      return this.idArray;
+    }
   }
-  //   |
-  //   |
-  //   |
-  //   V
-
-  // Called by the Show Selected button.
   public getAllSelected() {
-    this.memberArray = [];
+  console.log("delete");
+     this.memberArray = [];
     const tempArray = [];
     const ds = this.dataSource.data;
     const property = 'id';
+   // this.confirmService.confirm(name, 'This action is final. Gone forever!')
 
-    this.idArray.forEach(function (id, i) {
+    console.log("Get selected record::" + this.idArray);
 
-      // Need to match ids in idArray with dataSource.data.
-       const memberId: number = id;  // Extracts member id from selection array.
+    this.idArray.forEach((id, i) => {
 
-      // Search dataSource for each member_id and push those selected into a new data object.
-      ds.forEach(function (member, index) {
+     // For delete confirm dialog in deleteItem to match the db column name to fetch.
+   
 
-        if (ds[index][property] === memberId) {
-          tempArray.push(member);
+    const url = `${this.membersUrl}/${id}`;
+
+    // Call the confirm dialog component
+     this.httpService.deleteRecord(url)
+      .subscribe(
+        result => {
+          //this.success();
+          // Refresh DataTable to remove row.
+          this.deleteRowDataTable (id, this.idColumn, this.paginator, this.dataSource);
+        },
+        (err: HttpErrorResponse) => {
+          console.log(err.error);
+          console.log(err.message);
+          this.messagesService.openDialog('Error', 'Delete did not happen.');
         }
-      });
+      );
     });
-
-    this.idArray = []; // Empty the array for next query.
-    this.memberArray = tempArray;
-    this.paginator.pageIndex = 0;
-    this.dataSource.data = this.memberArray;
+    this.idArray = []; 
   }
+
+  
+ 
 
 // -----------  UTILITIES ------------------
 

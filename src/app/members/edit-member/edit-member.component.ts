@@ -1,9 +1,5 @@
 
 
-
-
-//  Child components process their own data, not the main-processor service.
-
 import { Component, AfterViewInit, Inject, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { HttpErrorResponse } from '@angular/common/http';
@@ -36,6 +32,7 @@ export class EditMemberComponent implements AfterViewInit {
   private idColumn;
   private paginator;
   private dataSource;
+  public message;
 
 
   // This is a form group from FormBuilder.
@@ -94,11 +91,14 @@ export class EditMemberComponent implements AfterViewInit {
   private fillForm(parsedData) {
     this.addEditForm.addEditMemberForm.setValue({
       id: parsedData.id,
-      first_name: parsedData.first_name,
-      last_name: parsedData.last_name,
-      user_name: parsedData.user_name,
-      country: parsedData.country,
+      name: parsedData.name,
+      contact_person: parsedData.contact_person,
+      contact_email: parsedData.contact_email,
+      org_code: parsedData.org_code,
+      location_code: parsedData.location_code,
     });
+
+   
     this.existingUserName(); // If existing name, don't validate.
   }
 
@@ -108,13 +108,18 @@ export class EditMemberComponent implements AfterViewInit {
 
   public update(formValue) {
     if (this.addEditForm.addEditMemberForm.valid) {
-      this.httpService.updateRecord(this.membersUrl, formValue)
+      console.log("updatedsucessfully");
+      console.log(formValue);
+      this.httpService.updateRecord(this.membersUrl, formValue, this.recordId)
       .subscribe(
         result => {
+          console.log("updatedsucessfully");
           // Update the table data view for the changes.
           this.updateDatatableService.updateDataTable(
             result, this.recordId, this.idColumn, this.paginator, this.dataSource, formValue);
+            console.log(formValue);
           this.success();
+          
         },
         (err: HttpErrorResponse) => {
           console.log(err.error);
@@ -122,15 +127,16 @@ export class EditMemberComponent implements AfterViewInit {
           this.handleError(err);
         }
       );
+    
     }
   }
 
-  // Check if the user_name field has a name already and set
-  //   the unique user name validation field to false so
+  // Check if the contact_email field has a name already and set
+  //   the unique contact_email validation field to false so
   //   it doesn't trigger validation until changed.
 
   private existingUserName() {
-    if (this.addEditForm.addEditMemberForm.controls['user_name']
+    if (this.addEditForm.addEditMemberForm.controls['contact_email']
         .value !== null) {
       this.addEditForm.inDatabase = false;
     } else {
